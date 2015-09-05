@@ -1,4 +1,9 @@
-class FolderList
+class FolderEntries
+
+  def self.find_attributes(root_path)
+    folder_entries = new(root_path)
+    folder_entries.find_attributes
+  end
 
   def initialize(root_path)
     @root_path = root_path
@@ -7,7 +12,7 @@ class FolderList
 
   attr_reader :file_paths
 
-  def create_file_hash
+  def find_attributes
     file_attributes
   end
 
