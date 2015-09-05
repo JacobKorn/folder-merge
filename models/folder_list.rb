@@ -8,7 +8,7 @@ class FolderList
   attr_reader :file_paths
 
   def create_file_hash
-    file_paths.zip(file_attributes).to_h
+    file_attributes
   end
 
 private
@@ -25,15 +25,16 @@ private
   def file_attributes
     file_paths.map do |file|
       if File.directory?(file)
-        folder_hash
+        folder_hash(file)
       else
         file_hash(file)
       end
     end
   end
 
-  def folder_hash
+  def folder_hash(folder)
     {
+      path: folder,
       folder: true,
       scanned: false
     }
@@ -41,6 +42,7 @@ private
 
   def file_hash(file)
     {
+      path: file,
       folder: false,
       sha1: Digest::SHA1.hexdigest(IO.read(file))
     }
