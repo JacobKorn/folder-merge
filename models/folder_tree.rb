@@ -1,5 +1,10 @@
 class FolderTree
 
+  def self.analyse(root_path)
+    result = new(root_path)
+    result.analyse_tree
+  end
+
   def initialize(root_path)
     @root_path = root_path
     @entries = []
