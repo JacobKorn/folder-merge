@@ -15,12 +15,27 @@ class FolderComparison
   end
 
   def unchanged_files
+    # same path same sha
     @unchanged_files ||= files_1.select do |file_1|
       files_2.any? do |file_2|
         file_2[:path] == file_1[:path] &&
         file_2[:sha1] == file_1[:sha1]
       end
     end
+  end
+
+  def modified_files
+    # Same path different sha
+    @modified_files ||= files_1.map do |file_1|
+    end
+  end
+
+  def moved_files
+    # different path same sha
+  end
+
+  def new_files
+    # no matching path or sha
   end
 
 private
