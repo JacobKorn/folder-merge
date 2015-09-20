@@ -9,9 +9,9 @@ class FolderComparison
     @entries_2 = FolderTree.analyse(folder_2)
   end
 
-  def prepare_folders
-    self.files_1 = prepare_folder(entries_1, folder_1)
-    self.files_2 = prepare_folder(entries_2, folder_2)
+  def run_comparison
+    prepare_folders
+    remove_unchanged_from_originals
   end
 
   def unchanged_files
@@ -21,11 +21,6 @@ class FolderComparison
         file_2[:sha1] == file_1[:sha1]
       end
     end
-  end
-
-  def remove_unchanged_from_originals
-    self.files_1 = files_1 - unchanged_files
-    self.files_2 = files_2 - unchanged_files
   end
 
 private
@@ -49,5 +44,14 @@ private
     end
   end
 
+  def prepare_folders
+    self.files_1 = prepare_folder(entries_1, folder_1)
+    self.files_2 = prepare_folder(entries_2, folder_2)
+  end
+
+  def remove_unchanged_from_originals
+    self.files_1 = files_1 - unchanged_files
+    self.files_2 = files_2 - unchanged_files
+  end
 
 end

@@ -32,7 +32,7 @@ RSpec.describe FolderComparison, type: :model do
   describe "#unchanged_files" do
 
     before do
-      compare.prepare_folders
+      compare.run_comparison
     end
 
     it "creates a hash of all the files with the same path and same SHA" do
@@ -41,7 +41,6 @@ RSpec.describe FolderComparison, type: :model do
     end
 
     it "removes the duplicate files from the original hashes" do
-      compare.remove_unchanged_from_originals
       expect(compare.files_1.count).to eq(1)
       expect(compare.files_2.count).to eq(0)
     end
