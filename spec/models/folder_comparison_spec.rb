@@ -11,28 +11,20 @@ RSpec.describe FolderComparison, type: :model do
     expect(result).to eq([true, false])
   end
 
-  describe "#prepare_folder" do
-
-    before do
-      @files = compare.send(:prepare_folder, compare.entries_1, compare.folder_1)
-    end
-
-    it "removes the folders" do
-      result = @files.map { |file| file[:folder] }.uniq.first
-      expect(result).to eq(false)
-    end
-
-    it "removes root portion of file paths" do
-      result = @files.map { |file| file[:path].include?(compare.folder_1) }.uniq.first
-      expect(result).to eq(false)
-    end
-
-  end
-
-  describe "#unchanged_files" do
+  describe "#run_comparison" do
 
     before do
       compare.run_comparison
+    end
+
+    it "removes folders from the entries hash" do
+      result = compare.files_1.map { |file| file[:folder] }.uniq.first
+      expect(result).to eq(false)
+    end
+
+    it "removes the root portion of file paths" do
+      result = compare.files_1.map { |file| file[:path].include?(compare.folder_1) }.uniq.first
+      expect(result).to eq(false)
     end
 
     it "creates a hash of all the files with the same path and same SHA" do
