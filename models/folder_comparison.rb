@@ -12,6 +12,9 @@ class FolderComparison
   def run_comparison
     prepare_folders
     remove_unchanged_from_originals
+    # remove_modified_from_originals
+  #   remove_moved_from_originals
+  #   remove_new_from_originals
   end
 
   def unchanged_files
@@ -26,16 +29,32 @@ class FolderComparison
 
   def modified_files
     # Same path different sha
-    @modified_files ||= files_1.map do |file_1|
+    @modified_files ||= files_1.select do |file_1|
+      files_2.any? do |file_2|
+        file_2[:path] == file_1[:path] &&
+        file_2[:sha1] != file_1[:sha1]
+      end
     end
   end
 
   def moved_files
     # different path same sha
+    @moved_files ||= files_1.select do |file_1|
+      files_2.any? do |file_2|
+        file_2[:path] != file_1[:path] &&
+        file_2[:sha1] == file_1[:sha1]
+      end
+    end
   end
 
   def new_files
     # no matching path or sha
+    @new_files ||= files_1.select do |file_1|
+      files_2.any? do |file_2|
+        file_2[:path] != file_1[:path] &&
+        file_2[:sha1] == file_1[:sha1]
+      end
+    end
   end
 
 private
