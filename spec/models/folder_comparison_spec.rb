@@ -41,15 +41,21 @@ RSpec.describe FolderComparison, type: :model do
     end
 
     it "creates a hash of modified files" do
-      expect(compare.modified_files.count).to eq("")
+      result = compare.modified_files.map { |a| a[:path]}
+      expected_result = ["/essay.txt"]
+      expect(result).to eq(expected_result)
     end
 
     it "creates a hash of moved files" do
-      expect(compare.moved_files.count).to eq("")
+      result = compare.moved_files #.map { |a| a[:path]}
+      expected_result = ""
+      expect(result).to eq(expected_result)
     end
 
     it "creates a hash of new files" do
-      expect(compare.new_files.count).to eq("")
+      result = compare.new_files.map { |a| a[:path]}
+      expected_result = ""
+      expect(result).to eq(expected_result)
     end
   end  
 

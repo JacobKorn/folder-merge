@@ -29,7 +29,7 @@ class FolderComparison
 
   def modified_files
     # Same path different sha
-    @modified_files ||= files_1.select do |file_1|
+    files_1.select do |file_1|
       files_2.any? do |file_2|
         file_2[:path] == file_1[:path] &&
         file_2[:sha1] != file_1[:sha1]
@@ -45,6 +45,14 @@ class FolderComparison
         file_2[:sha1] == file_1[:sha1]
       end
     end
+    @moved_files.map do |moved_file|
+      {
+        moved_file[:sha1] => {
+          path_1: moved_file[:path],
+          path_2: files_2[moved_file[:sha1].to_sym]
+        }
+      }
+    end
   end
 
   def new_files
@@ -52,7 +60,7 @@ class FolderComparison
     @new_files ||= files_1.select do |file_1|
       files_2.any? do |file_2|
         file_2[:path] != file_1[:path] &&
-        file_2[:sha1] == file_1[:sha1]
+        file_2[:sha1] != file_1[:sha1]
       end
     end
   end
