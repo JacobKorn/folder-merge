@@ -4,10 +4,26 @@ class CSVExport
 
   def initialize(args)
     @compare = args.fetch(:compare)
+    @csv_dir = args.fetch(:csv_dir, "./csv_files")
     set_file_hashes
   end
 
   attr_reader :file_name
+
+  def export_csv
+    Dir.mkdir(csv_dir) unless Dir.exists?(csv_dir)
+    write_csv("unchanged_files.csv", unchanged_files_csv)
+    write_csv("modified_files.csv", modified_files_csv)
+    write_csv("moved_files.csv", moved_files_csv)
+    write_csv("folder_1_new_files.csv", folder_1_new_files_csv)
+    write_csv("folder_2_new_files.csv", folder_2_new_files_csv)
+  end
+
+  def write_csv(file_name, csv_string)
+    File.open("./#{csv_dir}/#{file_name}", "w") do |file|
+      file.write(csv_string)
+    end
+  end
 
   def unchanged_files_csv
     CSV.generate do |csv|
@@ -60,7 +76,7 @@ class CSVExport
 
   private
 
-  attr_reader :compare
+  attr_reader :compare, :csv_dir
   attr_accessor :unchanged_files, :modified_files, :moved_files, :folder_1_new_files, :folder_2_new_files
 
   def set_file_hashes

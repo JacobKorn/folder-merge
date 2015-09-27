@@ -7,6 +7,17 @@ RSpec.describe CSVExport, type: :model do
   let(:compare) { FolderComparison.new(first_path, second_path) }
   let(:csv_export) { CSVExport.new(compare: compare) }
 
+  describe "integration" do
+
+    it "creates all csv files" do
+      compare.run_comparison
+      result = csv_export.export_csv
+      expected_result = ""
+      expect(result).to eq(expected_result)
+    end
+
+  end
+
   describe "#generate csv strings" do
 
     before do
