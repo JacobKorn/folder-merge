@@ -65,7 +65,7 @@ RSpec.describe FolderComparison, type: :model do
 
     describe "#moved_files" do
 
-      it "creates a hash of moved, and potentially duplicate files" do
+      it "creates a hash of moved, renamed, and potentially duplicate files" do
         result = compare.moved_files
         expected_result = [{"29d6162f2e3927a7cfe95c0ee87adbbbae00da35"=>{:paths_1=>["/report.txt"], :paths_2=>["/renamed_report.txt"]}}]
         expect(result).to eq(expected_result)

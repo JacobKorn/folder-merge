@@ -56,20 +56,20 @@ class FolderComparison
   end
 
   def folder_1_new_files
-    # no matching path or sha
-    # @new_files ||= CompareTree.compare(
-    #   same_path: false,
-    #   same_sha: false,
-    #   files_1: files_1,
-    #   files_2: files_2
-    # )
+    files_not_in_folder(files_1, files_2)
+  end
 
-    files_1.select do |file_1|
-      path_blank = find_path_in_files(file_1[:path], files_2).empty?
-      sha_blank = find_sha_in_files(file_1[:sha1], files_2).empty?
+  def folder_2_new_files
+    # no matching path or sha
+    files_not_in_folder(files_2, files_1)
+  end
+
+  def files_not_in_folder(files, folder)
+    files.select do |file|
+      path_blank = find_path_in_files(file[:path], folder).empty?
+      sha_blank = find_sha_in_files(file[:sha1], folder).empty?
       true if path_blank && sha_blank
     end
-
   end
 
   def find_path_in_files(path, files)
@@ -81,21 +81,6 @@ class FolderComparison
   def find_sha_in_files(sha, files)
     files.select do |file|
       file[:sha1] == sha
-    end
-  end
-
-  def match_diff_path_diff_sha(file, files)
-    files.any? do |file_2|
-      file[:sha1] != file_2[:sha1] && file[:path] != file_2[:path]
-    end
-  end
-
-  def folder_2_new_files
-    # no matching path or sha
-    files_2.select do |file_2|
-      path_blank = find_path_in_files(file_2[:path], files_1).empty?
-      sha_blank = find_sha_in_files(file_2[:sha1], files_1).empty?
-      true if path_blank && sha_blank
     end
   end
 
