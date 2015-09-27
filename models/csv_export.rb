@@ -27,6 +27,16 @@ class CSVExport
     end
   end
 
+  def moved_files_csv
+    CSV.generate do |csv|
+      csv << ["folder one filename", "file identifier (sha1)"]
+      binding.pry
+      modified_files.each do |file|
+        csv << [file[:path], file[:sha1]]
+      end
+    end
+  end
+
   private
 
   attr_reader :compare

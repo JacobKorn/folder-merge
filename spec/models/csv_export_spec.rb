@@ -7,7 +7,7 @@ RSpec.describe CSVExport, type: :model do
   let(:compare) { FolderComparison.new(first_path, second_path) }
   let(:csv_export) { CSVExport.new(compare: compare) }
 
-  describe "#unchanged_files_csv" do
+  describe "#generate csv strings" do
 
     before do
       compare.run_comparison
@@ -21,6 +21,12 @@ RSpec.describe CSVExport, type: :model do
 
     it "generates csv string for modified files" do
       result = csv_export.modified_files_csv
+      expected_result = "filename,file identifier (sha1)\n/essay.txt,15b892a2bd36681203e3c2ec61ca2ce5ddc7a418\n"
+      expect(result).to eq(expected_result)
+    end
+
+    it "generates csv string for moved files" do
+      result = csv_export.moved_files_csv
       expected_result = "filename,file identifier (sha1)\n/essay.txt,15b892a2bd36681203e3c2ec61ca2ce5ddc7a418\n"
       expect(result).to eq(expected_result)
     end
