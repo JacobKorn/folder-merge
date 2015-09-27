@@ -64,6 +64,8 @@ class FolderComparison
     files_not_in_folder(files_2, files_1)
   end
 
+private
+
   def files_not_in_folder(files, folder)
     files.select do |file|
       path_blank = find_path_in_files(file[:path], folder).empty?
@@ -83,8 +85,6 @@ class FolderComparison
       file[:sha1] == sha
     end
   end
-
-private
 
   attr_writer :files_1, :files_2, :unchanged_files
 
