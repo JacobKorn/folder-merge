@@ -27,7 +27,7 @@ RSpec.describe CSVExport, type: :model do
 
     it "generates csv string for moved files" do
       result = csv_export.moved_files_csv
-      expected_result = "filename,file identifier (sha1)\n/essay.txt,15b892a2bd36681203e3c2ec61ca2ce5ddc7a418\n"
+      expected_result = "File Identifier (SHA1),Folder One Paths,Folder Two Paths\n29d6162f2e3927a7cfe95c0ee87adbbbae00da35,/report.txt,/renamed_report.txt\n"
       expect(result).to eq(expected_result)
     end
 
