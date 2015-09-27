@@ -1,19 +1,24 @@
 require_relative '../include_helper'
+require 'fileutils'
 
 RSpec.describe CSVExport, type: :model do
 
   let(:first_path) { "./spec/support/diverged_folders/files" }
   let(:second_path) { "./spec/support/diverged_folders/files_diverged" }
   let(:compare) { FolderComparison.new(first_path, second_path) }
-  let(:csv_export) { CSVExport.new(compare: compare) }
+  let(:csv_dir) { "./spec/generated_csv_files" }
+  let(:csv_export) { CSVExport.new(compare: compare, csv_dir: csv_dir) }
 
   describe "integration" do
 
     it "creates all csv files" do
+      Dir.mkdir(csv_dir) unless Dir.exists?(csv_dir)
       compare.run_comparison
-      result = csv_export.export_csv
-      expected_result = ""
+      csv_export.export_csv
+      result = Dir.entries(csv_dir)
+      expected_result = [".", "..", "folder_1_new_files.csv", "folder_2_new_files.csv", "modified_files.csv", "moved_files.csv", "unchanged_files.csv"]
       expect(result).to eq(expected_result)
+      FileUtils.rm_rf(csv_dir)
     end
 
   end
