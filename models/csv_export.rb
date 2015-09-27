@@ -19,6 +19,11 @@ class CSVExport
     write_csv("folder_2_new_files.csv", folder_2_new_files_csv)
   end
 
+  private
+
+  attr_reader :compare, :csv_dir
+  attr_accessor :unchanged_files, :modified_files, :moved_files, :folder_1_new_files, :folder_2_new_files
+
   def write_csv(file_name, csv_string)
     File.open("./#{csv_dir}/#{file_name}", "w") do |file|
       file.write(csv_string)
@@ -73,11 +78,6 @@ class CSVExport
       end
     end
   end
-
-  private
-
-  attr_reader :compare, :csv_dir
-  attr_accessor :unchanged_files, :modified_files, :moved_files, :folder_1_new_files, :folder_2_new_files
 
   def set_file_hashes
     self.unchanged_files = compare.unchanged_files
