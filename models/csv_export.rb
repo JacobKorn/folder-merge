@@ -1,6 +1,10 @@
 require 'csv'
+require 'fileutils'
 
 class CSVExport
+
+  STANDARD_HEADER = ["Filename", "File Identifier (SHA1)"]
+  MOVED_FILES_HEADER = [ "File Identifier (SHA1)", "Folder One Paths", "Folder Two Paths"]
 
   def initialize(args)
     @compare = args.fetch(:compare)
@@ -11,7 +15,7 @@ class CSVExport
   attr_reader :file_name
 
   def export_csv
-    Dir.mkdir(csv_dir) unless Dir.exists?(csv_dir)
+    FileUtils.mkdir_p(csv_dir) unless Dir.exists?(csv_dir)
     write_csv("unchanged_files.csv", unchanged_files_csv)
     write_csv("modified_files.csv", modified_files_csv)
     write_csv("moved_files.csv", moved_files_csv)
@@ -25,14 +29,16 @@ class CSVExport
   attr_accessor :unchanged_files, :modified_files, :moved_files, :folder_1_new_files, :folder_2_new_files
 
   def write_csv(file_name, csv_string)
-    File.open("./#{csv_dir}/#{file_name}", "w") do |file|
-      file.write(csv_string)
+    unless csv_string == "#{STANDARD_HEADER.join(",")}\n" || csv_string == "#{MOVED_FILES_HEADER.join(",")}\n"
+      File.open("./#{csv_dir}/#{file_name}", "w") do |file|
+        file.write(csv_string)
+      end
     end
   end
 
   def unchanged_files_csv
     CSV.generate do |csv|
-      csv << ["Filename", "File Identifier (SHA1)"]
+      csv << STANDARD_HEADER
       unchanged_files.each do |file|
         csv << [file[:path], file[:sha1]]
       end
@@ -41,7 +47,7 @@ class CSVExport
 
   def modified_files_csv
     CSV.generate do |csv|
-      csv << ["Filename", "File Identifier (SHA1)"]
+      csv << STANDARD_HEADER
       modified_files.each do |file|
         csv << [file[:path], file[:sha1]]
       end
@@ -50,7 +56,7 @@ class CSVExport
 
   def moved_files_csv
     CSV.generate do |csv|
-      csv << [ "File Identifier (SHA1)", "Folder One Paths", "Folder Two Paths"]
+      csv << MOVED_FILES_HEADER
       moved_files.each do |file|
         csv << [
           file.keys.first,
@@ -63,7 +69,7 @@ class CSVExport
 
   def folder_1_new_files_csv
     CSV.generate do |csv|
-      csv << ["Filename", "File Identifier (SHA1)"]
+      csv << STANDARD_HEADER
       folder_1_new_files.each do |file|
         csv << [file[:path], file[:sha1]]
       end
@@ -72,7 +78,7 @@ class CSVExport
 
   def folder_2_new_files_csv
     CSV.generate do |csv|
-      csv << ["Filename", "File Identifier (SHA1)"]
+      csv << STANDARD_HEADER
       folder_2_new_files.each do |file|
         csv << [file[:path], file[:sha1]]
       end
