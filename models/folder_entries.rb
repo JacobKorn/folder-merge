@@ -1,45 +1,48 @@
 class FolderEntries
 
-  def self.find_attributes(root_path)
+  def self.entries_hash(root_path)
     folder_entries = new(root_path)
-    folder_entries.find_attributes
+    folder_entries.entries_hash
   end
 
   def initialize(root_path)
+    @entries = {}
     @root_path = root_path
-    @file_paths = get_file_paths
   end
 
-  attr_reader :file_paths
-
-  def find_attributes
-    file_attributes
+  def entries_hash
+    @entries_hash ||= populate_entries_hash
   end
 
 private
 
+  attr_accessor :entries
   attr_reader :root_path
 
-  def get_file_paths
+  def entry_paths
+    @entry_paths ||= populate_entry_paths
+  end
+
+  def populate_entry_paths
     file_names = Dir.entries(root_path)
     file_names.delete(".")
     file_names.delete("..")
     file_names.map { |entry| "#{root_path}/#{entry}"}
   end
 
-  def file_attributes
-    file_paths.map do |file|
+  def populate_entries_hash
+    entry_paths.each do |file|
       if File.directory?(file)
-        folder_hash(file)
+        entries[file] = folder_hash(file)
       else
         file_hash(file)
       end
     end
+    entries
   end
 
   def folder_hash(folder)
     {
-      path: folder,
       folder: true,
       scanned: false
     }
@@ -47,7 +50,6 @@ private
 
   def file_hash(file)
     {
-      path: file,
       folder: false,
       sha1: Digest::SHA1.hexdigest(IO.read(file))
     }
