@@ -14,13 +14,13 @@ RSpec.describe FolderEntries, type: :model do
 
   it "#folder_paths returns an Array of folder paths" do
     folder_entries = FolderEntries.new(path)
-    expected_result = ["./spec/support/diverged_folders/files/subfolder"]
+    expected_result = ["/subfolder"]
     expect(folder_entries.folder_paths).to eq(expected_result)
   end
 
   it "#file_paths returns an Array of file paths" do
     folder_entries = FolderEntries.new(path)
-    expected_result = ["./spec/support/diverged_folders/files/empty_file.txt", "./spec/support/diverged_folders/files/subfolder/quote.txt", "./spec/support/diverged_folders/files/quote.txt", "./spec/support/diverged_folders/files/essay.txt", "./spec/support/diverged_folders/files/report.txt"]
+    expected_result = ["/empty_file.txt", "/subfolder/quote.txt", "/quote.txt", "/essay.txt", "/report.txt"]
     expect(folder_entries.file_paths).to eq(expected_result)
   end
 

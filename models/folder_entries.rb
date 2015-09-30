@@ -27,11 +27,15 @@ private
   def populate_paths
     entry_paths.each do |entry_path|
       if File.directory?(entry_path)
-        self.folder_paths << entry_path
+        self.folder_paths << remove_root_path(entry_path)
       else
-        self.file_paths << entry_path
+        self.file_paths << remove_root_path(entry_path)
       end
     end
+  end
+
+  def remove_root_path(path)
+    path.split(root_path).last
   end
 
 end
