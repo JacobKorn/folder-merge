@@ -9,7 +9,7 @@ class SHACalculator
 
   def initialize(root_path)
     @root_path = root_path
-    @file_shas = {}
+    @file_shas = Hash.new { |h,k| h[k] = [] }
     get_paths
     build_shas
   end
@@ -26,12 +26,12 @@ private
 
   def build_shas
     file_paths.map do |path|
-      self.file_shas[sha(path)] = path
+      self.file_shas[sha(path)] << path
     end
   end
 
   def sha(path)
-    Digest::SHA1.hexdigest(IO.read(path))
+    Digest::SHA1.hexdigest(IO.read(root_path + path))
   end
 
 end
