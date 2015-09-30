@@ -5,9 +5,26 @@ class FolderEntries
     folder_entries.entries_hash
   end
 
+  def self.folder_and_files_hahses(root_path)
+    folder_entries = new(root_path)
+    [folder_entries.folders_hash, folder_entries.files_hash]
+  end
+
   def initialize(root_path)
     @entries = {}
     @root_path = root_path
+  end
+
+  def folders_hash
+    entries_hash.select do |path, meta|
+      meta[:folder]
+    end
+  end
+
+  def files_hash
+    entries_hash.select do |path, meta|
+      meta[:folder] == false
+    end
   end
 
   def entries_hash
@@ -35,7 +52,7 @@ private
       if File.directory?(file)
         entries[file] = folder_hash(file)
       else
-        file_hash(file)
+        entries[file] = file_hash(file)
       end
     end
     entries
