@@ -3,7 +3,7 @@ require 'fileutils'
 
 class CSVExport
 
-  STANDARD_HEADER = ["Filename", "File Identifier (SHA1)"]
+  STANDARD_HEADER = ["File Identifier (SHA1)", "Filename"]
   MOVED_FILES_HEADER = [ "File Identifier (SHA1)", "Folder One Paths", "Folder Two Paths"]
 
   def initialize(args)
@@ -39,8 +39,8 @@ class CSVExport
   def unchanged_files_csv
     CSV.generate do |csv|
       csv << STANDARD_HEADER
-      unchanged_files.each do |file|
-        csv << [file[:path], file[:sha1]]
+      unchanged_files.each do |sha, paths|
+        csv << [sha] + paths
       end
     end
   end
@@ -48,8 +48,8 @@ class CSVExport
   def modified_files_csv
     CSV.generate do |csv|
       csv << STANDARD_HEADER
-      modified_files.each do |file|
-        csv << [file[:path], file[:sha1]]
+      modified_files.each do |sha, paths|
+        csv << [sha] + paths
       end
     end
   end
@@ -70,8 +70,8 @@ class CSVExport
   def folder_1_new_files_csv
     CSV.generate do |csv|
       csv << STANDARD_HEADER
-      folder_1_new_files.each do |file|
-        csv << [file[:path], file[:sha1]]
+      folder_1_new_files.each do |sha, paths|
+        csv << [sha] + paths
       end
     end
   end
@@ -79,8 +79,8 @@ class CSVExport
   def folder_2_new_files_csv
     CSV.generate do |csv|
       csv << STANDARD_HEADER
-      folder_2_new_files.each do |file|
-        csv << [file[:path], file[:sha1]]
+      folder_2_new_files.each do |sha, paths|
+        csv << [sha] + paths
       end
     end
   end

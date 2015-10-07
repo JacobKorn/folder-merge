@@ -51,14 +51,14 @@ RSpec.describe FolderComparison, type: :model do
     describe "#new_files" do
 
       it "creates a hash of new files for folder 1" do
-        result = compare.folder_1_new_files.map { |a| a[:path]}
-        expected_result = ["/empty_file.txt", "/quote.txt"]
+        result = compare.folder_1_new_files.map { |sha, paths| paths}
+        expected_result = [["/empty_file.txt"], ["/quote.txt"]]
         expect(result).to eq(expected_result)
       end
       
       it "creates a hash of new files for folder 2" do
-        result = compare.folder_2_new_files.map { |a| a[:path]}
-        expected_result = ["/newfile.txt", "/quote_2.txt"]
+        result = compare.folder_2_new_files.map { |sha, paths| paths}
+        expected_result = [["/newfile.txt"], ["/quote_2.txt"]]
         expect(result).to eq(expected_result)
       end
 

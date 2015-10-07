@@ -78,32 +78,51 @@ private
 
   def files_not_in_folder(files, folder)
     files.select do |sha, paths|
-      path_blank = find_path_in_files(file[:path], folder).empty?
-      sha_blank = find_sha_in_files(file[:sha1], folder).empty?
-      true if path_blank && sha_blank
+      if sha_exists_in_file_list?(sha, folder)
+        false
+      elsif path_exists_in_file_list?(paths, folder)
+        false
+      else
+        true
+      end
     end
   end
 
-  def find_path_in_files(path, files)
-    files.select do |file|
-      file[:path] == path
+  def sha_exists_in_file_list?(sha, files)
+    !files[sha].empty?
+  end
+
+  def path_exists_in_file_list?(paths, files)
+    files_array = files.values.flatten
+    paths.any? do |path|
+      files_array.include?(path)
     end
   end
 
-  def find_sha_in_files(sha, files)
-    files.select do |file|
-      file[:sha1] == sha
+  def find_path_in_files(paths_to_check, files)
+    files.select do |sha, paths|
+      paths.include?(paths_to_check)
+    end
+  end
+
+  def find_sha_in_files(sha_to_check, files)
+    files.select do |sha, paths|
+      sha == sha_to_check
     end
   end
 
   def remove_unchanged_from_originals
-    self.files_1 = files_1 - unchanged_files
-    self.files_2 = files_2 - unchanged_files
+    unchanged_files.keys.each do |sha|
+      files_1.delete(sha)
+      files_2.delete(sha)
+    end
   end
 
   def remove_modified_from_originals
-    self.files_1 = files_1 - modified_files
-    self.files_2 = files_2 - modified_files
+    modified_files.keys.each do |sha|
+      files_1.delete(sha)
+      files_2.delete(sha)
+    end
   end
 
 end
