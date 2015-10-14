@@ -30,9 +30,7 @@ class CSVExport
 
   def write_csv(file_name, csv_string)
     unless csv_string == "#{STANDARD_HEADER.join(",")}\n" || csv_string == "#{MOVED_FILES_HEADER.join(",")}\n"
-      File.open("./#{csv_dir}/#{file_name}", "w") do |file|
-        file.write(csv_string)
-      end
+      File.write("./#{csv_dir}/#{file_name}", csv_string)
     end
   end
 
